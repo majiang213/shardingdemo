@@ -11,21 +11,21 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @org.springframework.context.annotation.Configuration
-@MapperScan(basePackages = "com.sharding.demo.dao", sqlSessionTemplateRef = "shardingSqlSessionTemplate")
+@MapperScan(basePackages = "com.sharding.demo.dao", sqlSessionTemplateRef = "sqlSessionTemplate")
 public class SqlSessionFactoryConfiguration {
 
     @Resource
     private DataSource dataSource;
 
-    @Bean(name = "shardingSqlSessionFactory")
-    public SqlSessionFactory shardingSqlSessionFactory() throws Exception {
+    @Bean(name = "sqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         return bean.getObject();
     }
 
-    @Bean(name = "shardingSqlSessionTemplate")
-    public SqlSessionTemplate shardingSqlSessionTemplate(@Qualifier("shardingSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+    @Bean(name = "sqlSessionTemplate")
+    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 }
