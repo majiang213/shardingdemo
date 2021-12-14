@@ -8,8 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan("com.sharding")
 public class DemoApplication {
 
-    public static void main(String[] arg) {
-        SpringApplication.run(DemoApplication.class, arg);
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
     }
 
 }
