@@ -1,4 +1,9 @@
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.10.1.237:3306/master
+    username: root
+    password: root
   shardingsphere:
     datasource:
       master:
@@ -27,3 +32,4 @@ spring:
     props:
       sql:
         show: true
+    enabled: false
