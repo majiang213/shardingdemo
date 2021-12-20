@@ -19,10 +19,10 @@ sharding的读写分离配置相当简单
 
 ```properties
 # 数据源。启用sharding之后会覆盖该配置
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.datasource.url=jdbc:mysql://127.0.0.1:13306/master
-spring.datasource.username=root
-spring.datasource.password=root
+spring.datasource.druid.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.druid.url=jdbc:mysql://127.0.0.1:13306/master
+spring.datasource.druid.username=root
+spring.datasource.druid.password=root
 # sharding配置
 # 多数据源定义
 spring.shardingsphere.datasource.names=master,slave0,slave1
@@ -32,7 +32,7 @@ spring.shardingsphere.datasource.master.jdbc-url=jdbc:mysql://127.0.0.1:13306/ma
 spring.shardingsphere.datasource.master.username=root
 spring.shardingsphere.datasource.master.password=root
 # 连接池类型，可以自己定义
-spring.shardingsphere.datasource.master.type=com.zaxxer.hikari.HikariDataSource 
+spring.shardingsphere.datasource.master.type=com.zaxxer.hikari.HikariDataSource
 # 数据源2
 spring.shardingsphere.datasource.slave0.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.shardingsphere.datasource.slave0.jdbc-url=jdbc:mysql://127.0.0.1:13306/slave0
@@ -212,3 +212,35 @@ public void getAfterInsert(){
 ```
 
 如预期展示一致。通过代码指定可以在插入之前的查询也可以使用主库进行。
+
+### 读写分离踩坑
+
+如果sharding读写分离使用druid连接池，不能同时添加以下两个依赖。启动会导致`dataSource`的装配冲突。
+
+```xml
+
+<dependency>
+    <groupId>org.apache.shardingsphere</groupId>
+    <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+    <version>4.1.1</version>
+</dependency>
+
+        <!-- 会导致启动报错，如果可以请直接依赖druid -->
+<dependency>
+<groupId>com.alibaba</groupId>
+<artifactId>druid-spring-boot-starter</artifactId>
+<version>1.2.8</version>
+</dependency>
+```
+
+如果druid-starter的依赖存在于父工程无法修改无法排除则只能在本工程的pom复写该依赖，并修改scope为test。这样起码不会影响正常运行（会影响单元测试）。
+
+```xml
+
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>1.2.8</version>
+    <scope>test</scope>
+</dependency>
+```
