@@ -18,8 +18,7 @@ public class KeyTestTest {
 
     @Test
     public void getList() {
-        Integer list = keyTestDao.getList();
-        System.out.println(list);
+        keyTestDao.getCount();
     }
 
     @Test
