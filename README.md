@@ -244,3 +244,77 @@ public void getAfterInsert(){
     <scope>test</scope>
 </dependency>
 ```
+
+#### 通过配置自动切换sharding数据源和druid数据源
+
+配置文件按照以下方式进行配置和添加依赖可以通过修改`spring.shardingsphere.enabled=true`配置来动态切换读写分离
+
+配置文件
+
+```properties
+# 数据源。启用sharding之后会覆盖该配置
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://127.0.0.1:13306/master
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+# sharding配置
+# 多数据源定义
+spring.shardingsphere.datasource.names=master,slave0,slave1
+# 数据源1
+spring.shardingsphere.datasource.master.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.shardingsphere.datasource.master.jdbc-url=jdbc:mysql://127.0.0.1:13306/master
+spring.shardingsphere.datasource.master.username=root
+spring.shardingsphere.datasource.master.password=root
+# 连接池类型不可更改
+spring.shardingsphere.datasource.master.type=com.zaxxer.hikari.HikariDataSource
+# 数据源2
+spring.shardingsphere.datasource.slave0.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.shardingsphere.datasource.slave0.jdbc-url=jdbc:mysql://127.0.0.1:13306/slave0
+spring.shardingsphere.datasource.slave0.username=root
+spring.shardingsphere.datasource.slave0.password=root
+spring.shardingsphere.datasource.slave0.type=com.zaxxer.hikari.HikariDataSource
+# 数据源3
+spring.shardingsphere.datasource.slave1.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.shardingsphere.datasource.slave1.jdbc-url=jdbc:mysql://127.0.0.1:13306/slave1
+spring.shardingsphere.datasource.slave1.username=root
+spring.shardingsphere.datasource.slave1.password=root
+spring.shardingsphere.datasource.slave1.type=com.zaxxer.hikari.HikariDataSource
+# 读写分离定义
+spring.shardingsphere.masterslave.name=ms
+# 定义写库
+spring.shardingsphere.masterslave.master-data-source-name=master
+# 定义读库
+spring.shardingsphere.masterslave.slave-data-source-names=slave0,slave1
+# 打印sql
+spring.shardingsphere.props.sql.show=true
+# 启动sharding配置
+spring.shardingsphere.enabled=true
+# 日志
+logging.level.com.sharding.demo=trace
+```
+
+pom依赖，需要在启动时排除druid-starter的依赖而后重新添加druid的依赖
+
+```xml
+
+<dependency>
+    <groupId>org.apache.shardingsphere</groupId>
+    <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+    <version>4.1.1</version>
+</dependency>
+
+<dependency>
+<groupId>com.alibaba</groupId>
+<artifactId>druid</artifactId>
+<version>1.2.8</version>
+</dependency>
+
+<dependency>
+<groupId>com.alibaba</groupId>
+<artifactId>druid-spring-boot-starter</artifactId>
+<version>1.2.8</version>
+<scope>test</scope>
+</dependency>
+```
+
