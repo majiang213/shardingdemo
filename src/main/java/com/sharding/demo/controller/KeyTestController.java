@@ -18,4 +18,9 @@ public class KeyTestController {
         Integer list = keyTestService.getList();
         System.out.println(list);
     }
+
+    @GetMapping("afterInsert")
+    public void afterInsert() {
+        keyTestService.getAfterInsert();
+    }
 }

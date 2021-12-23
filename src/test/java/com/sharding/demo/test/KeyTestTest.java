@@ -27,8 +27,8 @@ public class KeyTestTest {
     }
 
     @Test
-    public void InterAfterGet() {
-        keyTestService.InterAfterGet();
+    public void insertAfterGet() {
+        keyTestService.insertAfterGet();
     }
 
     @Test
