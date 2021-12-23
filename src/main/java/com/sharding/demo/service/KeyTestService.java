@@ -14,7 +14,24 @@ public class KeyTestService {
     private KeyTestDao keyTestDao;
 
     public Integer getList() {
-        return keyTestDao.getList();
+        return keyTestDao.getCount();
+    }
+
+    public void InterAfterGet() {
+        keyTestDao.insert();
+        keyTestDao.getCount();
+    }
+
+    public void getAfterInsert() {
+        // hintManager实现了AutoCloseable接口
+        /*try (HintManager instance = HintManager.getInstance()) {
+            // 强制使用主库，如果spring.sharding.enabled为false。该代码会自动失效，不会抛出异常
+            instance.setMasterRouteOnly();
+            keyTestDao.getCount();
+            keyTestDao.insert();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }*/
     }
 
     public void InterAfterGet() {

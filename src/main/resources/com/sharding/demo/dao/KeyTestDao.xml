@@ -5,7 +5,8 @@
         insert into key_test(`key`) values (1)
     </insert>
     <!-- SQL语句 -->
-    <select id="getList" resultType="java.lang.Integer">
-        select count(*) from key_test
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(*)
+        from key_test
     </select>
 </mapper>
